@@ -5,7 +5,7 @@ import progress
 
 
 def scan_missing_files(index, res_folder):
-    print "Scanning index, checking for missing files"
+    print("Scanning index, checking for missing files")
     num_files = len(index)
     missing = 0
     missing_bytes = 0
@@ -26,7 +26,7 @@ def scan_missing_files(index, res_folder):
 
 
 def scan_extra_files(index_by_cached_names, res_folder):
-    print "Scanning %s, checking for extra files" % res_folder
+    print("Scanning %s, checking for extra files" % res_folder)
     extras = 0
     extra_bytes = 0
     scanned = 0
@@ -45,21 +45,19 @@ def scan_extra_files(index_by_cached_names, res_folder):
 
 
 def diff_cache(index, res_folder):
-    index_by_cached_names = {}
-    for entry in index:
-        index_by_cached_names[entry.cached_name] = entry
+    index_by_cached_names = {ntry.cached_name: ntry for ntry in index}
 
     extras, extra_bytes = scan_extra_files(index_by_cached_names, res_folder)
     missing, missing_bytes, missing_download_bytes = scan_missing_files(index, res_folder)
 
     if missing:
-        print "%d files missing:" % missing
-        print "%s to download (%s on disk)" % (format_memory(missing_download_bytes), format_memory(missing_bytes))
-        print
+        print("%d files missing:" % missing)
+        print("%s to download (%s on disk)" % (format_memory(missing_download_bytes), format_memory(missing_bytes)))
+        print()
     else:
-        print "No missing files"
+        print("No missing files")
 
     if extras:
-        print "%d extra files (%s)" % (extras, format_memory(extra_bytes))
+        print("%d extra files (%s)" % (extras, format_memory(extra_bytes)))
     else:
-        print "No extra files"
+        print("No extra files")

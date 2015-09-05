@@ -1,20 +1,26 @@
 import gzip
 import os
-import urllib2
 import threading
 import time
-import Queue
-import StringIO
 from checksum import calc_checksum
 from format_memory import format_memory
 
 import progress
 
+try:
+    import urllib2
+    from cStringIO import StringIO
+    import Queue
+except ImportError:
+    import urllib.request as urllib2
+    from io import StringIO
+    import queue as Queue
+
+
 DOWNLOAD_THREAD_COUNT = 12
 
 def get_url_root():
     return 'http://res.eveonline.ccpgames.com'
-
 
 def DownloadResourceFile(target_url, expected_checksum, target_path):
     try:
@@ -25,7 +31,7 @@ def DownloadResourceFile(target_url, expected_checksum, target_path):
     data = contents.read()
     headers = contents.info()
     if ('content-encoding' in headers.keys() and headers['content-encoding']=='gzip'):
-        sio = StringIO.StringIO(data)
+        sio = StringIO(data)
         gzipper = gzip.GzipFile(fileobj=sio)
         data = gzipper.read()
 
@@ -98,13 +104,12 @@ class DownloadThread(threading.Thread):
                     break
         except Exception as e:
             import traceback
-            print traceback.format_exc(e)
+            print(traceback.format_exc(e))
 
 
 def download_missing_files(res_folder, files_to_download):
     q = Queue.Queue()
-    for f in files_to_download:
-        q.put(f)
+    [q.put(f) for f in files_to_download]
 
     downloaded_files = 0
     old_size = q.qsize()
@@ -136,17 +141,15 @@ def download_missing_files(res_folder, files_to_download):
             num_failed += t.failed
             num_succeeded += t.succeeded
             if t.messages:
-                print t.messages
+                print(t.messages)
 
         return num_succeeded, num_failed
 
     except KeyboardInterrupt:
         progress.clear()
-        print "Stopping download threads"
-        for t in thread_list:
-            t.stop()
-        for t in thread_list:
-            t.join()
+        print("Stopping download threads")
+        [t.stop() for t in thread_list]
+        [t.join() for t in thread_list]
         raise
 
 def scan_missing_files(index, res_folder):
@@ -168,9 +171,9 @@ def scan_missing_files(index, res_folder):
             missing_bytes_on_disk += entry.size_in_bytes
 
     progress.clear()
-    print "%6.1d files missing - %10.10s - %10.10s on disk\r" % \
-          (missing, format_memory(missing_bytes), format_memory(missing_bytes_on_disk))
-    print
+    print("%6.1d files missing - %10.10s - %10.10s on disk\r" % \
+          (missing, format_memory(missing_bytes), format_memory(missing_bytes_on_disk)))
+    print()
 
     return missing_files
 
@@ -178,5 +181,5 @@ def scan_missing_files(index, res_folder):
 def download_cache(index, res_folder):
     missing_files = scan_missing_files(index, res_folder)
     num_succeeded, num_failed = download_missing_files(res_folder, missing_files)
-    print "Downloaded %d files (%d failed)" % (num_succeeded, num_failed)
+    print("Downloaded %d files (%d failed)" % (num_succeeded, num_failed))
 

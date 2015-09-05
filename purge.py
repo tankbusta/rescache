@@ -29,10 +29,8 @@ def delete_extra_files(index_by_cached_names, res_folder):
 
 
 def purge_cache(index, res_folder):
-    index_by_cached_names = {}
-    for entry in index:
-        index_by_cached_names[entry.cached_name] = entry
+    index_by_cached_names = {ntry.cached_name: ntry for ntry in index}
 
     extras = delete_extra_files(index_by_cached_names, res_folder)
 
-    print "Deleted %6.1d extra files from cache folder" % extras
+    print("Deleted %6.1d extra files from cache folder" % extras)

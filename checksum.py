@@ -2,6 +2,7 @@ import hashlib
 
 __author__ = 'snorri.sturluson'
 
+CHUNK_SZ = 8192
 
 def calc_checksum(filename):
     """
@@ -10,12 +11,9 @@ def calc_checksum(filename):
     :return:
     """
     try:
-        f = open(filename, "rb")
-        contents = f.read()
-        m = hashlib.md5()
-        m.update(contents)
-        checksum = m.hexdigest()
-        return checksum
-
+        with open(filename, 'rb') as f:
+            m = hashlib.md5()
+            [m.update(chunk) for chunk in iter(lambda: f.read(CHUNK_SZ), b'')]
+        return m.hexdigest()
     except IOError:
         return None

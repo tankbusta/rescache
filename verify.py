@@ -30,8 +30,8 @@ def verify_cache(index, res_folder):
                 pass
 
     progress.clear()
-    print "Verified %d files:" % num_files
-    print "  %6.1d files corrupt" % corrupt
-    print "  %6.1d files not yet downloaded" % missing
+    print("Verified %d files:" % num_files)
+    print("  %6.1d files corrupt" % corrupt)
+    print("  %6.1d files not yet downloaded" % missing)
 
     return corrupt, missing

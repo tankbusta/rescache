@@ -30,14 +30,14 @@ def _get_index(filename):
         with open(index_path) as f:
             index = parse_index(f)
     except IOError:
-        print "Couldn't open index file: %s" % index_path
+        print("Couldn't open index file: %s" % index_path)
         sys.exit(1)
     return index
 
 
 def _get_res_folder(args):
     if not args.cache:
-        print "Shared cache folder location has not been set"
+        print("Shared cache folder location has not been set")
         sys.exit(1)
     return os.path.join(args.cache, "ResFiles")
 
@@ -63,20 +63,20 @@ def move_command(args):
 
 
 def run_interactive():
-    print "rescache is a tool for verifying and managing the EVE shared resource cache."
-    print
-    print "The current shared cache location is\n\t%s" % get_shared_cache_folder()
-    print
+    print("rescache is a tool for verifying and managing the EVE shared resource cache.")
+    print()
+    print("The current shared cache location is\n\t%s" % get_shared_cache_folder())
+    print()
 
     res_folder = os.path.join(get_shared_cache_folder(), "ResFiles")
     index = _get_index(DEFAULT_INDEX_FILENAME)
 
-    print "Verifying cache integrity"
+    print("Verifying cache integrity")
     corrupt, missing = verify_cache(index, res_folder)
-    print
+    print()
 
     if corrupt:
-        print "%d corrupt files were deleted" % corrupt
+        print("%d corrupt files were deleted" % corrupt)
 
     if missing:
         answer = raw_input("Would you like to download missing files now? (y/n)")
@@ -133,10 +133,9 @@ def main():
 
     try:
         args.func(args)
-
     except KeyboardInterrupt:
         progress.clear()
-        print "Operation cancelled"
+        print("Operation cancelled")
         sys.exit(1)
 
 
