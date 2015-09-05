@@ -53,7 +53,7 @@ def diff_cache(index, res_folder):
     if missing:
         print("%d files missing:" % missing)
         print("%s to download (%s on disk)" % (format_memory(missing_download_bytes), format_memory(missing_bytes)))
-        print()
+        print('')
     else:
         print("No missing files")
 

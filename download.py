@@ -173,7 +173,7 @@ def scan_missing_files(index, res_folder):
     progress.clear()
     print("%6.1d files missing - %10.10s - %10.10s on disk\r" % \
           (missing, format_memory(missing_bytes), format_memory(missing_bytes_on_disk)))
-    print()
+    print('')
 
     return missing_files
 

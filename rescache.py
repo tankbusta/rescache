@@ -64,16 +64,16 @@ def move_command(args):
 
 def run_interactive():
     print("rescache is a tool for verifying and managing the EVE shared resource cache.")
-    print()
+    print('')
     print("The current shared cache location is\n\t%s" % get_shared_cache_folder())
-    print()
+    print('')
 
     res_folder = os.path.join(get_shared_cache_folder(), "ResFiles")
     index = _get_index(DEFAULT_INDEX_FILENAME)
 
     print("Verifying cache integrity")
     corrupt, missing = verify_cache(index, res_folder)
-    print()
+    print('')
 
     if corrupt:
         print("%d corrupt files were deleted" % corrupt)
@@ -84,7 +84,6 @@ def run_interactive():
             download_cache(index, res_folder)
 
     raw_input("Press ENTER to exit...")
-
 
 
 

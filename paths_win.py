@@ -1,4 +1,8 @@
-import _winreg
+
+try:
+    import _winreg as winreg
+except ImportError:
+    import winreg
 import os
 
 
@@ -8,10 +12,10 @@ def get_shared_cache_folder():
     If there is no entry, then we create one.
     :return:
     """
-    _winreg.aReg = _winreg.ConnectRegistry(None, _winreg.HKEY_CURRENT_USER)
+    winreg.aReg = winreg.ConnectRegistry(None, winreg.HKEY_CURRENT_USER)
     try:
-        key = _winreg.OpenKey(_winreg.aReg, r"SOFTWARE\CCP\EVEONLINE")
-        path, _ = _winreg.QueryValueEx(key, "CACHEFOLDER")
+        key = winreg.OpenKey(winreg.aReg, r"SOFTWARE\CCP\EVEONLINE")
+        path, _ = winreg.QueryValueEx(key, "CACHEFOLDER")
     except OSError:
         return None
     return path
@@ -25,11 +29,11 @@ def set_shared_cache_folder(folder_path):
             raise ValueError("Could not create directory {}".format(folder_path))
     folder_path = os.path.normpath(folder_path) + os.sep
 
-    key_eveonline = _winreg.CreateKey(_winreg.aReg, r"SOFTWARE\CCP\EVEONLINE")
-    _winreg.SetValueEx(key_eveonline, "CACHEFOLDER", 0, _winreg.REG_SZ, folder_path)
+    key_eveonline = winreg.CreateKey(winreg.aReg, r"SOFTWARE\CCP\EVEONLINE")
+    winreg.SetValueEx(key_eveonline, "CACHEFOLDER", 0, winreg.REG_SZ, folder_path)
 
-    key_eveprobe = _winreg.CreateKey(_winreg.aReg, r"SOFTWARE\CCP\EVEPROBE")
-    _winreg.SetValueEx(key_eveprobe, "CACHEFOLDER", 0, _winreg.REG_SZ, folder_path)
+    key_eveprobe = winreg.CreateKey(winreg.aReg, r"SOFTWARE\CCP\EVEPROBE")
+    winreg.SetValueEx(key_eveprobe, "CACHEFOLDER", 0, winreg.REG_SZ, folder_path)
 
 
 def get_index_path(hint):
